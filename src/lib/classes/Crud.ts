@@ -224,6 +224,11 @@ export class Crud {
     }
   }
 
+  async create (request: any, reply: any) {
+    await this.model.create(request.body)
+    reply.code(201).send({})
+  }
+
   async get (request: any, reply: any, options: Partial<CrudGetOptions>) {
     const opts: CrudGetOptions = {
       idParam: 'id',

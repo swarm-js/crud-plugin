@@ -55,6 +55,73 @@ npm install --save @swarmjs/crud
 
 ```ts
 import { Crud } from '@swarmjs/crud'
+import User from './models/User'
+
+const crud = new Crud(User)
+
+const userSchema = {
+  type: 'object',
+  properties: {
+    email: {
+      type: 'string',
+      format: 'email'
+    },
+    name: {
+      type: 'string'
+    }
+  }
+}
+
+export default class UsersController {
+  @Returns(200, crud.getListSchema(userSchema), 'The users list')
+  static list(request, reply) {
+    crud.list(request, reply, {
+      defaultLimit: 20,
+      filter: null, // You can use a MongoDB query
+      defaultSort: '_id'
+    })
+  }
+
+  @Returns(201, { type: 'object' }, 'Document created')
+  static create(request, reply) {
+    crud.create(request, reply)
+  }
+
+  @Returns(200, userSchema, 'The searched user')
+  static get(request, reply) {
+    crud.get(request, reply, {
+      idParam: 'id', // The params field where is the searched document ID
+      primaryKey: '_id' // The primary key in the mongoose model where we search the value passed in params
+    })
+  }
+
+  @Returns(200, { type: 'object' }, 'Update successful')
+  @Returns(404, { type: 'object' }, 'Document not found')
+  static update(request, reply) {
+    crud.update(request, reply, {
+      idParam: 'id', // The params field where is the searched document ID
+      primaryKey: '_id' // The primary key in the mongoose model where we search the value passed in params
+    })
+  }
+
+  @Returns(200, { type: 'object' }, 'Update successful')
+  @Returns(201, { type: 'object' }, 'Document created')
+  static replace(request, reply) {
+    crud.replace(request, reply, {
+      idParam: 'id', // The params field where is the searched document ID
+      primaryKey: '_id' // The primary key in the mongoose model where we search the value passed in params
+    })
+  }
+
+  @Returns(204, { type: 'object' }, 'Delete successful')
+  @Returns(404, { type: 'object' }, 'Document not found')
+  static delete(request, reply) {
+    crud.delete(request, reply, {
+      idParam: 'id', // The params field where is the searched document ID
+      primaryKey: '_id' // The primary key in the mongoose model where we search the value passed in params
+    })
+  }
+}
 ```
 
 ## Roadmap
