@@ -15,7 +15,7 @@ export class Crud {
     this.cache = {}
   }
 
-  async list (request: any, reply: any, options: Partial<CrudListOptions>) {
+  async list (request: any, reply: any, options: Partial<CrudListOptions> = {}) {
     const opts: CrudListOptions = {
       defaultLimit: 20,
       filter: null,
@@ -229,7 +229,7 @@ export class Crud {
     reply.code(201).send({})
   }
 
-  async get (request: any, reply: any, options: Partial<CrudGetOptions>) {
+  async get (request: any, reply: any, options: Partial<CrudGetOptions> = {}) {
     const opts: CrudGetOptions = {
       idParam: 'id',
       primaryKey: '_id',
@@ -244,7 +244,11 @@ export class Crud {
     reply.code(200).send(doc)
   }
 
-  async update (request: any, reply: any, options: Partial<CrudUpdateOptions>) {
+  async update (
+    request: any,
+    reply: any,
+    options: Partial<CrudUpdateOptions> = {}
+  ) {
     const opts: CrudUpdateOptions = {
       idParam: 'id',
       primaryKey: '_id',
@@ -263,7 +267,11 @@ export class Crud {
     reply.code(200).send({})
   }
 
-  async replace (request: any, reply: any, options: Partial<CrudUpdateOptions>) {
+  async replace (
+    request: any,
+    reply: any,
+    options: Partial<CrudUpdateOptions> = {}
+  ) {
     const opts: CrudUpdateOptions = {
       idParam: 'id',
       primaryKey: '_id',
@@ -287,7 +295,11 @@ export class Crud {
     else reply.code(200).send({})
   }
 
-  async delete (request: any, reply: any, options: Partial<CrudDeleteOptions>) {
+  async delete (
+    request: any,
+    reply: any,
+    options: Partial<CrudDeleteOptions> = {}
+  ) {
     const opts: CrudDeleteOptions = {
       idParam: 'id',
       primaryKey: '_id',
