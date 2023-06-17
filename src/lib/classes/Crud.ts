@@ -17,6 +17,7 @@ export class Crud {
 
   async list (request: any, reply: any, options: Partial<CrudListOptions> = {}) {
     const opts: CrudListOptions = {
+      primaryKey: '_id',
       defaultLimit: 20,
       filter: null,
       defaultSort: '_id',
@@ -192,7 +193,11 @@ export class Crud {
       .exec()
 
     reply.code(200).send({
-      docs,
+      docs: docs.map((doc: any) => {
+        doc.id = doc[opts.primaryKey]
+        delete doc[opts.primaryKey]
+        return doc
+      }),
       page,
       limit,
       maxPage,
@@ -240,6 +245,9 @@ export class Crud {
       [opts.primaryKey]: request.params[opts.idParam]
     })
     if (!doc) throw new NotFound()
+
+    doc.id = doc[opts.primaryKey]
+    delete doc[opts.primaryKey]
 
     reply.code(200).send(doc)
   }
