@@ -194,6 +194,7 @@ export class Crud {
 
     reply.code(200).send({
       docs: docs.map((doc: any) => {
+        doc = doc.toObject()
         doc.id = doc[opts.primaryKey]
         delete doc[opts.primaryKey]
         return doc
@@ -241,11 +242,12 @@ export class Crud {
       ...options
     }
 
-    const doc = await this.model.findOne({
+    let doc = await this.model.findOne({
       [opts.primaryKey]: request.params[opts.idParam]
     })
     if (!doc) throw new NotFound()
 
+    doc = doc.toObject()
     doc.id = doc[opts.primaryKey]
     delete doc[opts.primaryKey]
 
