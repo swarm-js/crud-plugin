@@ -194,7 +194,10 @@ export class Crud {
 
     reply.code(200).send({
       docs: docs.map((doc: any) => {
-        doc = doc.toObject()
+        doc = doc.toObject({
+          flattenMaps: true,
+          flattenObjectIds: true
+        })
         doc.id = doc[opts.primaryKey]
         delete doc[opts.primaryKey]
         return doc
@@ -247,7 +250,10 @@ export class Crud {
     })
     if (!doc) throw new NotFound()
 
-    doc = doc.toObject()
+    doc = doc.toObject({
+      flattenMaps: true,
+      flattenObjectIds: true
+    })
     doc.id = doc[opts.primaryKey]
     delete doc[opts.primaryKey]
 
