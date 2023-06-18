@@ -340,15 +340,16 @@ export class Crud {
       ...options
     }
 
-    const res = await this.model.updateOne(
-      {
-        [opts.primaryKey]: request.params[opts.idParam]
-      },
-      {
-        $set: request.body
-      }
-    )
-    if (!res.nModified) throw NotFound()
+    const doc = await this.model.findOne({
+      [opts.primaryKey]: request.params[opts.idParam]
+    })
+    if (!doc) throw new NotFound()
+
+    for (let key in request.body) {
+      doc.set(key, request.body[key])
+    }
+
+    await doc.save()
     reply.code(200).send({})
   }
 
@@ -363,21 +364,19 @@ export class Crud {
       ...options
     }
 
-    const res = await this.model.updateOne(
-      {
-        [opts.primaryKey]: request.params[opts.idParam]
-      },
-      {
-        ...request.body,
-        [opts.primaryKey]: request.params[opts.idParam]
-      },
-      {
-        upsert: true
+    let doc = await this.model.findOne({
+      [opts.primaryKey]: request.params[opts.idParam]
+    })
+    if (doc) {
+      for (let key in request.body) {
+        doc.set(key, request.body[key])
       }
-    )
-    if (res.nUpserted) reply.code(201).send({})
-    else if (!res.nModified) throw NotFound()
-    else reply.code(200).send({})
+      await doc.save()
+      reply.code(200).send({})
+    } else {
+      await this.model.create(request.body)
+      reply.code(201).send({})
+    }
   }
 
   async delete (
@@ -390,10 +389,15 @@ export class Crud {
       primaryKey: '_id',
       ...options
     }
-    const res = await this.model.deleteOne({
+
+    let doc = await this.model.findOne({
       [opts.primaryKey]: request.params[opts.idParam]
     })
-    if (!res.deletedCount) throw new NotFound()
-    reply.code(204).send({})
+    if (doc) {
+      await doc.delete()
+      reply.code(204).send({})
+    } else {
+      throw new NotFound()
+    }
   }
 }
