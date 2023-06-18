@@ -368,9 +368,7 @@ export class Crud {
       [opts.primaryKey]: request.params[opts.idParam]
     })
     if (doc) {
-      for (let key in request.body) {
-        doc.set(key, request.body[key])
-      }
+      doc.overwrite(request.body)
       await doc.save()
       reply.code(200).send({})
     } else {
