@@ -15,7 +15,12 @@ export class Crud {
     this.cache = {}
   }
 
-  async list (request: any, reply: any, options: Partial<CrudListOptions> = {}) {
+  async list (
+    request: any,
+    reply: any,
+    options: Partial<CrudListOptions> = {},
+    doNotSend = false
+  ) {
     const opts: CrudListOptions = {
       primaryKey: '_id',
       defaultLimit: 20,
@@ -192,21 +197,39 @@ export class Crud {
       .limit(limit)
       .exec()
 
-    reply.code(200).send({
-      docs: docs.map((doc: any) => {
-        doc = doc.toObject({
-          flattenMaps: true,
-          flattenObjectIds: true
-        })
-        doc.id = doc[opts.primaryKey]
-        delete doc[opts.primaryKey]
-        return doc
-      }),
-      page,
-      limit,
-      maxPage,
-      total
-    })
+    if (doNotSend) {
+      return {
+        docs: docs.map((doc: any) => {
+          doc = doc.toObject({
+            flattenMaps: true,
+            flattenObjectIds: true
+          })
+          doc.id = doc[opts.primaryKey]
+          delete doc[opts.primaryKey]
+          return doc
+        }),
+        page,
+        limit,
+        maxPage,
+        total
+      }
+    } else {
+      reply.code(200).send({
+        docs: docs.map((doc: any) => {
+          doc = doc.toObject({
+            flattenMaps: true,
+            flattenObjectIds: true
+          })
+          doc.id = doc[opts.primaryKey]
+          delete doc[opts.primaryKey]
+          return doc
+        }),
+        page,
+        limit,
+        maxPage,
+        total
+      })
+    }
   }
 
   getListSchema (docSchema: any) {
@@ -258,6 +281,51 @@ export class Crud {
     delete doc[opts.primaryKey]
 
     reply.code(200).send(doc)
+  }
+
+  async first (
+    request: any,
+    reply: any,
+    options: Partial<CrudListOptions> = {}
+  ) {
+    request.query.sort = '_id'
+    request.query.limit = 1
+    request.query.page = 1
+    const ret = await this.list(request, reply, options, true)
+
+    if ((ret?.docs ?? []).length) {
+      return ret?.docs[1]
+    } else {
+      throw NotFound()
+    }
+  }
+
+  async last (request: any, reply: any, options: Partial<CrudListOptions> = {}) {
+    request.query.sort = '-_id'
+    request.query.limit = 1
+    request.query.page = 1
+    const ret = await this.list(request, reply, options, true)
+
+    if ((ret?.docs ?? []).length) {
+      return ret?.docs[1]
+    } else {
+      throw NotFound()
+    }
+  }
+
+  async count (
+    request: any,
+    reply: any,
+    options: Partial<CrudListOptions> = {}
+  ) {
+    request.query.sort = '_id'
+    request.query.limit = 1
+    request.query.page = 1
+    const ret = await this.list(request, reply, options, true)
+
+    return {
+      count: ret?.total ?? 0
+    }
   }
 
   async update (
