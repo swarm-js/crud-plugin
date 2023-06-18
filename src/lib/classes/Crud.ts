@@ -388,11 +388,10 @@ export class Crud {
       ...options
     }
 
-    let doc = await this.model.findOne({
+    const res = await this.model.deleteOne({
       [opts.primaryKey]: request.params[opts.idParam]
     })
-    if (doc) {
-      await doc.delete()
+    if (res.deletedCount) {
       reply.code(204).send({})
     } else {
       throw new NotFound()
