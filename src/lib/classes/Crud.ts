@@ -258,8 +258,10 @@ export class Crud {
   }
 
   async create (request: any, reply: any) {
-    await this.model.create(request.body)
-    reply.code(201).send({})
+    const doc = await this.model.create(request.body)
+    reply.code(201).send({
+      id: doc.id
+    })
   }
 
   async get (request: any, reply: any, options: Partial<CrudGetOptions> = {}) {
@@ -372,8 +374,10 @@ export class Crud {
       await doc.save()
       reply.code(200).send({})
     } else {
-      await this.model.create(request.body)
-      reply.code(201).send({})
+      const newDoc = await this.model.create(request.body)
+      reply.code(201).send({
+        id: newDoc.id
+      })
     }
   }
 
