@@ -295,7 +295,7 @@ export class Crud {
     const ret = await this.list(request, reply, options, true)
 
     if ((ret?.docs ?? []).length) {
-      return ret?.docs[1]
+      reply.code(200).send(ret?.docs[0])
     } else {
       throw NotFound()
     }
@@ -308,7 +308,7 @@ export class Crud {
     const ret = await this.list(request, reply, options, true)
 
     if ((ret?.docs ?? []).length) {
-      return ret?.docs[1]
+      reply.code(200).send(ret?.docs[0])
     } else {
       throw NotFound()
     }
@@ -324,9 +324,9 @@ export class Crud {
     request.query.page = 1
     const ret = await this.list(request, reply, options, true)
 
-    return {
+    reply.code(200).send({
       count: ret?.total ?? 0
-    }
+    })
   }
 
   async update (
