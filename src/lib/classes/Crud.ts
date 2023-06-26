@@ -26,6 +26,7 @@ export class Crud {
       defaultLimit: 20,
       filter: null,
       defaultSort: '_id',
+      transform: null,
       ...options
     }
 
@@ -197,38 +198,27 @@ export class Crud {
       .limit(limit)
       .exec()
 
+    const returned = {
+      docs: docs.map((doc: any) => {
+        doc = doc.toObject({
+          flattenMaps: true,
+          flattenObjectIds: true
+        })
+        doc.id = doc[opts.primaryKey]
+        delete doc[opts.primaryKey]
+        if (opts.transform !== null) doc = opts.transform(doc)
+        return doc
+      }),
+      page,
+      limit,
+      maxPage,
+      total
+    }
+
     if (doNotSend) {
-      return {
-        docs: docs.map((doc: any) => {
-          doc = doc.toObject({
-            flattenMaps: true,
-            flattenObjectIds: true
-          })
-          doc.id = doc[opts.primaryKey]
-          delete doc[opts.primaryKey]
-          return doc
-        }),
-        page,
-        limit,
-        maxPage,
-        total
-      }
+      return returned
     } else {
-      reply.code(200).send({
-        docs: docs.map((doc: any) => {
-          doc = doc.toObject({
-            flattenMaps: true,
-            flattenObjectIds: true
-          })
-          doc.id = doc[opts.primaryKey]
-          delete doc[opts.primaryKey]
-          return doc
-        }),
-        page,
-        limit,
-        maxPage,
-        total
-      })
+      reply.code(200).send(returned)
       return
     }
   }
@@ -268,6 +258,7 @@ export class Crud {
     const opts: CrudGetOptions = {
       idParam: 'id',
       primaryKey: '_id',
+      transform: null,
       ...options
     }
 
@@ -282,6 +273,8 @@ export class Crud {
     })
     doc.id = doc[opts.primaryKey]
     delete doc[opts.primaryKey]
+
+    if (opts.transform !== null) doc = opts.transform(doc)
 
     reply.code(200).send(doc)
   }

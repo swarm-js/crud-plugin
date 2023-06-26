@@ -5,4 +5,5 @@ export interface CrudListOptions {
   defaultLimit: number
   defaultSort: string
   filter: CrudObject | null
+  transform: any | null
 }
