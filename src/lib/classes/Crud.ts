@@ -268,12 +268,24 @@ export class Crud {
       primaryKey: '_id',
       transform: null,
       populate: null,
+      filter: null,
       ...options
     }
 
-    let doc = await this.model.findOne({
-      [opts.primaryKey]: request.params[opts.idParam]
-    })
+    const filters: CrudObject[] = [
+      {
+        [opts.primaryKey]: request.params[opts.idParam]
+      }
+    ]
+    if (opts.filter !== null) filters.push(opts.filter)
+    let mongoQuery = {}
+    if (filters.length === 1) mongoQuery = filters[0]
+    else if (filters.length)
+      mongoQuery = {
+        $and: filters
+      }
+
+    let doc = await this.model.findOne(mongoQuery)
     if (!doc) throw new NotFound()
 
     if (opts.populate !== null) {
