@@ -214,7 +214,7 @@ export class Crud {
         })
         doc.id = doc[opts.primaryKey]
         delete doc[opts.primaryKey]
-        if (opts.transform !== null) doc = opts.transform(doc)
+        if (opts.transform !== null) doc = opts.transform(doc, request)
         return doc
       }),
       page,
@@ -289,7 +289,7 @@ export class Crud {
     doc.id = doc[opts.primaryKey]
     delete doc[opts.primaryKey]
 
-    if (opts.transform !== null) doc = opts.transform(doc)
+    if (opts.transform !== null) doc = opts.transform(doc, request)
 
     reply.code(200).send(doc)
   }
