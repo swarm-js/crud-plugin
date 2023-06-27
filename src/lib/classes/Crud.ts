@@ -27,6 +27,7 @@ export class Crud {
       filter: null,
       defaultSort: '_id',
       transform: null,
+      populate: null,
       ...options
     }
 
@@ -191,12 +192,19 @@ export class Crud {
     if (page < 1) page = 1
     if (page > maxPage) page = maxPage
 
-    const docs = await this.model
+    const req = this.model
       .find(mongoQuery)
       .sort(sort)
       .skip((page - 1) * limit)
       .limit(limit)
-      .exec()
+
+    if (opts.populate !== null) {
+      if (opts.populate instanceof Array === false)
+        opts.populate = [opts.populate as string]
+      for (let field of opts.populate) req.populate(field)
+    }
+
+    const docs = await req.exec()
 
     const returned = {
       docs: docs.map((doc: any) => {
@@ -259,6 +267,7 @@ export class Crud {
       idParam: 'id',
       primaryKey: '_id',
       transform: null,
+      populate: null,
       ...options
     }
 
@@ -266,6 +275,12 @@ export class Crud {
       [opts.primaryKey]: request.params[opts.idParam]
     })
     if (!doc) throw new NotFound()
+
+    if (opts.populate !== null) {
+      if (opts.populate instanceof Array === false)
+        opts.populate = [opts.populate as string]
+      for (let field of opts.populate) await doc.populate(field)
+    }
 
     doc = doc.toObject({
       flattenMaps: true,

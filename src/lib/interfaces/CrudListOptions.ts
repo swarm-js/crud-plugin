@@ -6,4 +6,5 @@ export interface CrudListOptions {
   defaultSort: string
   filter: CrudObject | null
   transform: any | null
+  populate: string | string[] | null
 }
