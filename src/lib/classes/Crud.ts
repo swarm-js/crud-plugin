@@ -188,7 +188,8 @@ export class Crud {
     if (limit < 1) limit = opts.defaultLimit
 
     const total = await this.model.countDocuments(mongoQuery)
-    const maxPage = Math.ceil(total / limit)
+    let maxPage = Math.ceil(total / limit)
+    if (maxPage < 1) maxPage = 1
     if (page < 1) page = 1
     if (page > maxPage) page = maxPage
 
