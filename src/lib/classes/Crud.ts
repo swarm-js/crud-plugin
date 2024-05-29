@@ -5,6 +5,7 @@ import { CrudListOptions } from '../interfaces/CrudListOptions'
 import { CrudUpdateOptions } from '../interfaces/CrudUpdateOptions'
 import { NotFound } from 'http-errors'
 import qs from 'qs'
+import { getProperty, setProperty } from 'dot-prop'
 
 export class Crud {
   model: any
@@ -36,6 +37,7 @@ export class Crud {
     let limit: number = opts.defaultLimit
     let page = 1
     let sort: string = opts.defaultSort
+    let fields: null | string[] = null
 
     const query = qs.parse(
       new URL(request.raw.url, `http://url.com`).search.substring(1)
@@ -58,6 +60,13 @@ export class Crud {
               $search: query[key] ?? ''
             }
           })
+          break
+        case 'fields':
+          if (typeof query[key] === 'string')
+            fields = (query[key] as string)
+              .split(',')
+              .map(a => a.trim())
+              .filter(a => a.length)
           break
         default:
           let val: any = query[key]
@@ -216,6 +225,13 @@ export class Crud {
         doc.id = doc[opts.primaryKey]
         delete doc[opts.primaryKey]
         if (opts.transform !== null) doc = opts.transform(doc, request)
+        if (fields !== null) {
+          let newDoc = {}
+          for (let field of fields) {
+            setProperty(newDoc, field, getProperty(doc, field))
+          }
+          doc = newDoc
+        }
         return doc
       }),
       page,
@@ -273,6 +289,12 @@ export class Crud {
       ...options
     }
 
+    let fields: null | string[] = null
+    if (typeof request.query.fields === 'string')
+      fields = (request.query.fields as string)
+        .split(',')
+        .map(a => a.trim())
+        .filter(a => a.length)
     const filters: CrudObject[] = [
       {
         [opts.primaryKey]: request.params[opts.idParam]
@@ -303,6 +325,14 @@ export class Crud {
     delete doc[opts.primaryKey]
 
     if (opts.transform !== null) doc = opts.transform(doc, request)
+
+    if (fields !== null) {
+      let newDoc = {}
+      for (let field of fields) {
+        setProperty(newDoc, field, getProperty(doc, field))
+      }
+      doc = newDoc
+    }
 
     reply.code(200).send(doc)
   }
