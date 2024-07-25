@@ -1956,6 +1956,13 @@ dot-prop@^5.1.0, dot-prop@^5.2.0:
   dependencies:
     is-obj "^2.0.0"
 
+dot-prop@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/dot-prop/-/dot-prop-9.0.0.tgz#bae5982fe6dc6b8fddb92efef4f2ddff26779e92"
+  integrity sha512-1gxPBJpI/pcjQhKgIU91II6Wkay+dLcN3M6rf2uwP8hRur3HtQXjVrdAK3sjC0piaEuxzMwjXChcETiJl47lAQ==
+  dependencies:
+    type-fest "^4.18.2"
+
 dotgitignore@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/dotgitignore/-/dotgitignore-2.1.0.tgz#a4b15a4e4ef3cf383598aaf1dfa4a04bcc089b7b"
@@ -5228,13 +5235,6 @@ trim-repeated@^1.0.0:
   dependencies:
     escape-string-regexp "^1.0.2"
 
-ts-dot-prop@^2.1.4:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/ts-dot-prop/-/ts-dot-prop-2.1.4.tgz#1834b1035787de916d051e291cda93b51b39baab"
-  integrity sha512-ds8gGKOMrjsJiYvxP5drQy9JaxGT+NTal3E06RtfnyZnEk3kXzaG6OkvWGuLU8m7kqXFkjtI3JlUrg5OSqD+Jw==
-  dependencies:
-    ts-util-is "^2.0.0"
-
 ts-node@^10.8.1, ts-node@^10.9.1:
   version "10.9.1"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.9.1.tgz#e73de9102958af9e1f0b168a6ff320e25adcff4b"
@@ -5253,11 +5253,6 @@ ts-node@^10.8.1, ts-node@^10.9.1:
     make-error "^1.1.1"
     v8-compile-cache-lib "^3.0.1"
     yn "3.1.1"
-
-ts-util-is@^2.0.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/ts-util-is/-/ts-util-is-2.1.0.tgz#4b46eedc00feab894a89742fbbcb5e83ffe01963"
-  integrity sha512-qDZ6txIWjwh7FZsoGiqsH82GuNRZE8uOWOGqbi66NGlMFz7Ps8ak8azJiDhdbpkgmmACdLFJJtuajmQoFwQNNA==
 
 tsconfig-paths@^3.14.1:
   version "3.14.2"
@@ -5327,6 +5322,11 @@ type-fest@^0.8.0, type-fest@^0.8.1:
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.8.1.tgz#09e249ebde851d3b1e48d27c105444667f17b83d"
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
+
+type-fest@^4.18.2:
+  version "4.23.0"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-4.23.0.tgz#8196561a6b835175473be744f3e41e2dece1496b"
+  integrity sha512-ZiBujro2ohr5+Z/hZWHESLz3g08BBdrdLMieYFULJO+tWc437sn8kQsWLJoZErY8alNhxre9K4p3GURAG11n+w==
 
 typed-array-length@^1.0.4:
   version "1.0.4"
