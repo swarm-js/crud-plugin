@@ -42,9 +42,9 @@
     "node": ">=10"
   },
   "dependencies": {
-    "dot-prop": "^9.0.0",
     "http-errors": "^2.0.0",
-    "qs": "^6.11.2"
+    "qs": "^6.11.2",
+    "ts-dot-prop": "^2.1.4"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",

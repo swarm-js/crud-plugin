@@ -5,7 +5,7 @@ import { CrudListOptions } from '../interfaces/CrudListOptions'
 import { CrudUpdateOptions } from '../interfaces/CrudUpdateOptions'
 import { NotFound } from 'http-errors'
 import qs from 'qs'
-import { getProperty, setProperty } from 'dot-prop'
+import { get as getProperty, set as setProperty } from 'ts-dot-prop'
 
 export class Crud {
   model: any
