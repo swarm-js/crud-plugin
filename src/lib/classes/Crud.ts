@@ -43,7 +43,7 @@ export class Crud {
       new URL(request.raw.url, `http://url.com`).search.substring(1)
     )
 
-    for (let key in query) {
+    for (const key in query) {
       switch (key) {
         case 'limit':
           limit = +(query[key] ?? opts.defaultLimit)
@@ -216,28 +216,30 @@ export class Crud {
 
     const docs = await req.exec()
 
-    const returned = {
-      docs: docs.map((doc: any) => {
-        doc = doc.toObject({
-          flattenMaps: true,
-          flattenObjectIds: true
-        })
-        doc.id = doc[opts.primaryKey]
-        delete doc[opts.primaryKey]
-        if (opts.transform !== null) doc = opts.transform(doc, request)
-        if (fields !== null) {
-          let newDoc = {}
-          for (let field of fields) {
-            setProperty(newDoc, field, getProperty(doc, field))
-          }
-          doc = newDoc
-        }
-        return doc
-      }),
+    const returned: any = {
+      docs: [],
       page,
       limit,
       maxPage,
       total
+    }
+
+    for (let doc of docs) {
+      doc = doc.toObject({
+        flattenMaps: true,
+        flattenObjectIds: true
+      })
+      doc.id = doc[opts.primaryKey]
+      delete doc[opts.primaryKey]
+      if (opts.transform !== null) doc = await opts.transform(doc, request)
+      if (fields !== null) {
+        const newDoc = {}
+        for (const field of fields) {
+          setProperty(newDoc, field, getProperty(doc, field))
+        }
+        doc = newDoc
+      }
+      returned.docs.push(doc)
     }
 
     if (doNotSend) {
@@ -314,7 +316,7 @@ export class Crud {
     if (opts.populate !== null) {
       if (opts.populate instanceof Array === false)
         opts.populate = [opts.populate as string]
-      for (let field of opts.populate) await doc.populate(field)
+      for (const field of opts.populate) await doc.populate(field)
     }
 
     doc = doc.toObject({
@@ -324,11 +326,11 @@ export class Crud {
     doc.id = doc[opts.primaryKey]
     delete doc[opts.primaryKey]
 
-    if (opts.transform !== null) doc = opts.transform(doc, request)
+    if (opts.transform !== null) doc = await opts.transform(doc, request)
 
     if (fields !== null) {
-      let newDoc = {}
-      for (let field of fields) {
+      const newDoc = {}
+      for (const field of fields) {
         setProperty(newDoc, field, getProperty(doc, field))
       }
       doc = newDoc
