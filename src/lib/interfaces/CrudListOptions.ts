@@ -7,4 +7,5 @@ export interface CrudListOptions {
   filter: CrudObject | null
   transform: any | null
   populate: string | string[] | null
+  autoFilter: boolean
 }

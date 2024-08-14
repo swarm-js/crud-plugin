@@ -11,12 +11,12 @@ export class Crud {
   model: any
   cache: CrudObject
 
-  constructor (model: any) {
+  constructor(model: any) {
     this.model = model
     this.cache = {}
   }
 
-  async list (
+  async list(
     request: any,
     reply: any,
     options: Partial<CrudListOptions> = {},
@@ -29,6 +29,7 @@ export class Crud {
       defaultSort: '_id',
       transform: null,
       populate: null,
+      autoFilter: true,
       ...options
     }
 
@@ -69,6 +70,8 @@ export class Crud {
               .filter(a => a.length)
           break
         default:
+          if (opts.autoFilter === false)
+            break
           let val: any = query[key]
           if (typeof val === 'string')
             val = {
@@ -250,7 +253,7 @@ export class Crud {
     }
   }
 
-  getListSchema (docSchema: any) {
+  getListSchema(docSchema: any) {
     return {
       type: 'object',
       properties: {
@@ -274,14 +277,14 @@ export class Crud {
     }
   }
 
-  async create (request: any, reply: any) {
+  async create(request: any, reply: any) {
     const doc = await this.model.create(request.body)
     reply.code(201).send({
       id: doc.id
     })
   }
 
-  async get (request: any, reply: any, options: Partial<CrudGetOptions> = {}) {
+  async get(request: any, reply: any, options: Partial<CrudGetOptions> = {}) {
     const opts: CrudGetOptions = {
       idParam: 'id',
       primaryKey: '_id',
@@ -339,7 +342,7 @@ export class Crud {
     reply.code(200).send(doc)
   }
 
-  async first (
+  async first(
     request: any,
     reply: any,
     options: Partial<CrudListOptions> = {}
@@ -356,7 +359,7 @@ export class Crud {
     }
   }
 
-  async last (request: any, reply: any, options: Partial<CrudListOptions> = {}) {
+  async last(request: any, reply: any, options: Partial<CrudListOptions> = {}) {
     request.query.sort = '-_id'
     request.query.limit = 1
     request.query.page = 1
@@ -369,7 +372,7 @@ export class Crud {
     }
   }
 
-  async count (
+  async count(
     request: any,
     reply: any,
     options: Partial<CrudListOptions> = {}
@@ -384,7 +387,7 @@ export class Crud {
     })
   }
 
-  async update (
+  async update(
     request: any,
     reply: any,
     options: Partial<CrudUpdateOptions> = {}
@@ -408,7 +411,7 @@ export class Crud {
     reply.code(200).send({})
   }
 
-  async replace (
+  async replace(
     request: any,
     reply: any,
     options: Partial<CrudUpdateOptions> = {}
@@ -434,7 +437,7 @@ export class Crud {
     }
   }
 
-  async delete (
+  async delete(
     request: any,
     reply: any,
     options: Partial<CrudDeleteOptions> = {}
