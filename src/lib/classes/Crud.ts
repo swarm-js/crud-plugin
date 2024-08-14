@@ -5,7 +5,7 @@ import { CrudGetOptions } from '../interfaces/CrudGetOptions'
 import { CrudListOptions } from '../interfaces/CrudListOptions'
 import { CrudUpdateOptions } from '../interfaces/CrudUpdateOptions'
 import qs from 'qs'
-import { getProperty, setProperty } from 'dot-prop'
+import { get as getProperty, set as setProperty } from 'object-path'
 
 export class Crud {
   model: any
