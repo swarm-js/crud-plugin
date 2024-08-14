@@ -42,7 +42,7 @@
     "node": ">=10"
   },
   "dependencies": {
-    "dot-prop": "9.0.0",
+    "dot-prop": "7",
     "http-errors": "^2.0.0",
     "qs": "^6.11.2"
   },
