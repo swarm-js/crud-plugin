@@ -90,6 +90,13 @@ export class Crud {
                   }
                 })
                 break
+              case 'bool':
+                filters.push({
+                  [key]: {
+                    [`$${cond}`]: val[cond] === 'true'
+                  }
+                })
+                break
               case 'range':
                 const range = val[cond]
                   .split(',')
