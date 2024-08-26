@@ -93,7 +93,7 @@ export class Crud {
               case 'bool':
                 filters.push({
                   [key]: {
-                    [`$${cond}`]: val[cond] === 'true'
+                    $eq: val[cond] === 'true'
                   }
                 })
                 break
