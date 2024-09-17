@@ -8,4 +8,6 @@ export interface CrudListOptions {
   transform: any | null
   populate: string | string[] | null
   autoFilter: boolean
+  searchMode: 'fulltext' | 'regex'
+  searchableFields: string[]
 }

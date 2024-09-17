@@ -30,6 +30,8 @@ export class Crud {
       transform: null,
       populate: null,
       autoFilter: true,
+      searchMode: 'fulltext',
+      searchableFields: [],
       ...options
     }
 
@@ -56,11 +58,27 @@ export class Crud {
           sort = (query[key] ?? opts.defaultSort) as string
           break
         case 'q':
-          filters.push({
-            $text: {
-              $search: query[key] ?? ''
+          if (opts.searchMode === 'fulltext')
+            filters.push({
+              $text: {
+                $search: query[key] ?? ''
+              }
+            })
+          else {
+            const ors = []
+            for (const fieldName of opts.searchableFields) {
+              ors.push({
+                [fieldName]: {
+                  $regex: query[key] ?? '',
+                  $options: 'i'
+                }
+              })
             }
-          })
+            if (ors.length) {
+              if (ors.length === 1) filters.push(ors[0])
+              else filters.push({ $or: ors })
+            }
+          }
           break
         case 'fields':
           if (typeof query[key] === 'string')
